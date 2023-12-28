@@ -1,5 +1,5 @@
 # UdS_Stage_MVVM_WPS_Tuto1
 
 Tutoriel de SingletonSean:
-Build a WPF MVVM Application - START TO FINISH TUTORIAL
-https://youtu.be/54ZmhbpjBmg?si=OtYlwlpaN6ufPUKs
+WPF MVVM TUTORIAL SERIE
+https://youtube.com/playlist?list=PLA8ZIAm2I03hS41Fy4vFpRw8AdYNBXmNm&si=ZOSiEDWoBIMGvCxA
