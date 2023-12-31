@@ -21,6 +21,15 @@ namespace Reservroom.Models
             return _reservations.Where(x => x.Username == username);
         }
 
+        /// <summary>
+        /// Get all reservations
+        /// </summary>
+        /// <returns>Reservations list</returns>
+        public IEnumerable<Reservation> GetAllReservations()
+        {
+            return _reservations;
+        }
+
         public void AddReservation(Reservation reservation)
         {
             if (reservation == null) throw new ArgumentNullException(nameof(reservation));

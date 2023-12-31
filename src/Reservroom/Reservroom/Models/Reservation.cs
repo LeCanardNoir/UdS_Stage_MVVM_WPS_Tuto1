@@ -10,16 +10,16 @@ namespace Reservroom.Models
     {
 
         public RoomID RoomID { get; }
-        public DateTime StartTime { get; }
-        public DateTime EndTime { get; }
+        public DateTime StartDate { get; }
+        public DateTime EndDate { get; }
         public string Username { get; }
-        public TimeSpan Length => EndTime.Subtract(StartTime);
+        public TimeSpan Length => EndDate.Subtract(StartDate);
 
         public Reservation(RoomID roomID, DateTime startTime, DateTime endTime, string username)
         {
             RoomID = roomID;
-            StartTime = startTime;
-            EndTime = endTime;
+            StartDate = startTime;
+            EndDate = endTime;
             Username = username;
         }
 
@@ -31,7 +31,7 @@ namespace Reservroom.Models
             if(reservation.RoomID != RoomID)
                 return false;
 
-            return reservation.StartTime < EndTime && reservation.EndTime > StartTime;
+            return reservation.StartDate < EndDate && reservation.EndDate > StartDate;
         }
     }
 }
