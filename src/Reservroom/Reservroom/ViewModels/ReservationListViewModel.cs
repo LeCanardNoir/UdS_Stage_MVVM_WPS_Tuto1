@@ -1,4 +1,5 @@
-﻿using Reservroom.Models;
+﻿using Reservroom.Commands;
+using Reservroom.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,36 +21,11 @@ namespace Reservroom.ViewModels
         {
             _reservations = new ObservableCollection<ReservationViewModel>();
 
-            _reservations.Add(
-                new ReservationViewModel(
-                    new Reservation(
-                        new RoomID(1,2),
-                        DateTime.Now,
-                        new DateTime(year:2024, month:02, day:01),
-                        "burn@"
-                        )
-                    )
-                );
-            _reservations.Add(
-                new ReservationViewModel(
-                    new Reservation(
-                        new RoomID(3, 2),
-                        DateTime.Now,
-                        new DateTime(year: 2024, month: 02, day: 01),
-                        "God"
-                        )
-                    )
-                );
-            _reservations.Add(
-                new ReservationViewModel(
-                    new Reservation(
-                        new RoomID(3, 2),
-                        DateTime.Now,
-                        new DateTime(year: 2024, month: 02, day: 01),
-                        "Dumb ass"
-                        )
-                    )
-                );
+            MakeReservationCommand = new NavigateCommand();
+
+            _reservations.Add(new ReservationViewModel(new Reservation(new RoomID(1,2),DateTime.Now,new DateTime(year:2024, month:02, day:01),"burn@")));
+            _reservations.Add(new ReservationViewModel(new Reservation(new RoomID(11, 2), DateTime.Now, new DateTime(year: 2024, month: 02, day: 01), "burn@")));
+            _reservations.Add(new ReservationViewModel(new Reservation(new RoomID(1, 23), DateTime.Now, new DateTime(year: 2024, month: 02, day: 01), "burn@")));
         }
 
     }

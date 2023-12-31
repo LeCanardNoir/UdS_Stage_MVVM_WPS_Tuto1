@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Reservroom.Commands;
+using Reservroom.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +44,7 @@ namespace Reservroom.ViewModels
             }
         }
 
-        private DateTime _startDate;
+        private DateTime _startDate = DateTime.Now;
         public DateTime StatDate
         {
             get { return _startDate; }
@@ -53,7 +55,7 @@ namespace Reservroom.ViewModels
             }
         }
 
-        private DateTime _endDate;
+        private DateTime _endDate = DateTime.Now.AddDays(1);
         public DateTime EndDate
         {
             get { return _endDate; }
@@ -67,9 +69,10 @@ namespace Reservroom.ViewModels
         public ICommand SubmitCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public MakeReservationViewModel()
+        public MakeReservationViewModel(Hotel hotel)
         {
-            
+            SubmitCommand = new MakeReservationCommand(this, hotel);
+            CancelCommand = new CancelMakeReservationCommand();
         }
 
     }
