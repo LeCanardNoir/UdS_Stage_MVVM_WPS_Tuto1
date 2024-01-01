@@ -1,5 +1,7 @@
 ﻿using Reservroom.Commands;
 using Reservroom.Models;
+using Reservroom.Services;
+using Reservroom.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Windows.Input;
 
 namespace Reservroom.ViewModels
 {
-    public class MakeReservationViewModel : ViewModelsBase
+    public class MakeReservationViewModel : ViewModelBase
     {
         private string _username;
         public string Username 
@@ -69,10 +71,10 @@ namespace Reservroom.ViewModels
         public ICommand SubmitCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public MakeReservationViewModel(Hotel hotel)
+        public MakeReservationViewModel(Hotel hotel, NavigationServices reservationViewNavigationServices)
         {
-            SubmitCommand = new MakeReservationCommand(this, hotel);
-            CancelCommand = new CancelMakeReservationCommand();
+            SubmitCommand = new MakeReservationCommand(this, hotel, reservationViewNavigationServices);
+            CancelCommand = new NavigateCommand(reservationViewNavigationServices);
         }
 
     }

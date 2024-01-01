@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reservroom.ViewModels
 {
-    public class ViewModelsBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

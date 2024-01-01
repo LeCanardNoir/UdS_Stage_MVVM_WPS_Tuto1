@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reservroom.ViewModels
 {
-    public class ReservationViewModel : ViewModelsBase
+    public class ReservationViewModel : ViewModelBase
     {
         private Reservation _reservation;
 

@@ -31,7 +31,7 @@ namespace Reservroom.Models
         /// </summary>
         /// <param name="username">The user of the user</param>
         /// <returns>Reservations list</returns>
-        public IEnumerable<Reservation> GetAllReservations(string username) => _reservationBook.GetAllReservations();
+        public IEnumerable<Reservation> GetAllReservations() => _reservationBook.GetAllReservations();
 
         /// <summary>
         /// Make a reservation
