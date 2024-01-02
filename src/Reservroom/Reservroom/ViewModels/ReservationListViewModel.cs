@@ -18,6 +18,7 @@ namespace Reservroom.ViewModels
         private readonly ObservableCollection<ReservationViewModel> _reservations;
         public IEnumerable<ReservationViewModel> Reservations => _reservations;
 
+        public ICommand LoadReservationCommand { get; }
         public ICommand MakeReservationCommand { get; }
 
         public ReservationListViewModel(Hotel hotel, NavigationServices makeReservationViewNavigationServices)
@@ -25,16 +26,23 @@ namespace Reservroom.ViewModels
             _hotel = hotel;
 
             _reservations = new ObservableCollection<ReservationViewModel>();
-
+            LoadReservationCommand = new LoadReservationCommand(_hotel, this);
             MakeReservationCommand = new NavigateCommand(makeReservationViewNavigationServices);
 
-            UpdateReservation();
+            //UpdateReservation();
         }
 
-        private void UpdateReservation()
+        public static ReservationListViewModel LoadViewModel(Hotel hotel, NavigationServices makeReservationViewNavigationServices)
+        {
+            ReservationListViewModel viewModel = new ReservationListViewModel(hotel, makeReservationViewNavigationServices);
+            viewModel.LoadReservationCommand.Execute(null);
+            return viewModel;
+        }
+
+        public void UpdateReservation(IEnumerable<Reservation> reservations)
         {
             _reservations.Clear();
-            foreach (Reservation item in _hotel.GetAllReservations())
+            foreach (Reservation item in reservations)
             {
                 ReservationViewModel reservationViewModel = new ReservationViewModel(item);
                 _reservations.Add(reservationViewModel);

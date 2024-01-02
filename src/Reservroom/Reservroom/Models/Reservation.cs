@@ -23,7 +23,7 @@ namespace Reservroom.Models
             Username = username;
         }
 
-        internal bool Conflict(Reservation reservation)
+        public bool Conflict(Reservation reservation)
         {
             if (reservation == null)
                 throw new ArgumentNullException();

@@ -1,4 +1,7 @@
 ﻿using Reservroom.Exceptions;
+using Reservroom.Services.ReservationConflictValidators;
+using Reservroom.Services.ReservationCreators;
+using Reservroom.Services.ReservationProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,35 +12,46 @@ namespace Reservroom.Models
 {
     public class ReservationBook
     {
-        private readonly List<Reservation> _reservations;
+        private readonly IReservationProvider _reservationProvider;
+        private readonly IReservationCreator _reservationCreator;
+        private readonly IResvationConflictValidator _reservationConflictValidator;
 
-        public ReservationBook()
+
+        public ReservationBook(IReservationProvider reservationProvider, IReservationCreator reservationCreator, IResvationConflictValidator reservationConflictValidator)
         {
-            _reservations = new List<Reservation>();
+            _reservationProvider = reservationProvider;
+            _reservationCreator = reservationCreator;
+            _reservationConflictValidator = reservationConflictValidator;
         }
 
-        public IEnumerable<Reservation> GetReservationsForUser(string username)
-        {
-            return _reservations.Where(x => x.Username == username);
-        }
+        //public IEnumerable<Reservation> GetReservationsForUser(string username)
+        //{
+        //    return _reservationProvider.GetAllReservation().Where(x => x.Username == username);
+        //}
 
         /// <summary>
         /// Get all reservations
         /// </summary>
         /// <returns>Reservations list</returns>
-        public IEnumerable<Reservation> GetAllReservations()
+        public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
         {
-            return _reservations;
+            return await _reservationProvider.GetAllReservation();
         }
 
-        public void AddReservation(Reservation reservation)
+        public async Task AddReservationAsync(Reservation reservation)
         {
             if (reservation == null) throw new ArgumentNullException(nameof(reservation));
 
-            if (_reservations.Find(x => x.Conflict(reservation)) is Reservation existingReservation)
-                throw new ReservationConflictException(existingReservation, reservation);
+            Reservation conflictReservation = await _reservationConflictValidator.GetConflictReservation(reservation);
+            if (conflictReservation != null)
+                throw new ReservationConflictException(conflictReservation, reservation);
 
-            _reservations.Add(reservation);
+            //List<Reservation> allReservations = (await _reservationProvider.GetAllReservation()).ToList();
+
+            //if (allReservations.Find(x => x.Conflict(reservation)) is Reservation existingReservation)
+            //    throw new ReservationConflictException(existingReservation, reservation);
+
+            await _reservationCreator.CreateReservation(reservation);
         }
 
     }

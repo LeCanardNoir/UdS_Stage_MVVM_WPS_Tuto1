@@ -12,10 +12,10 @@ namespace Reservroom.Models
 
         public string Name {  get; }
 
-        public Hotel(string name)
+        public Hotel(string name, ReservationBook reservationBook)
         {
             Name = name;
-            _reservationBook = new ReservationBook();
+            _reservationBook = reservationBook;
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Reservroom.Models
         /// </summary>
         /// <param name="username">The user of the user</param>
         /// <returns>Reservations list of the user</returns>
-        public IEnumerable<Reservation> GetReservationsForUser(string username) => _reservationBook.GetReservationsForUser(username);
+        //public async Task<IEnumerable<Reservation>> GetReservationsForUser(string username) => await _reservationBook.GetReservationsForUser(username);
 
 
         /// <summary>
@@ -31,14 +31,14 @@ namespace Reservroom.Models
         /// </summary>
         /// <param name="username">The user of the user</param>
         /// <returns>Reservations list</returns>
-        public IEnumerable<Reservation> GetAllReservations() => _reservationBook.GetAllReservations();
+        public async Task<IEnumerable<Reservation>> GetAllReservations() => await _reservationBook.GetAllReservationsAsync();
 
         /// <summary>
         /// Make a reservation
         /// </summary>
         /// <param name="reservation"></param>
         /// <exception cref="ReservationConflictException"
-        public void MakeReservation(Reservation reservation) => _reservationBook.AddReservation(reservation);
+        public async Task MakeReservation(Reservation reservation) => await _reservationBook.AddReservationAsync(reservation);
 
     }
 }
