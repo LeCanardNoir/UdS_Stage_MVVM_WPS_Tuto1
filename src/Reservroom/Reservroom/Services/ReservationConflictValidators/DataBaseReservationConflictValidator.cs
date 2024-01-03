@@ -18,27 +18,26 @@ namespace Reservroom.Services.ReservationConflictValidators
         {
             _dbContextFactory = dbContextFactory;
         }
-        public async Task<Reservation> GetConflictReservation(Reservation reservation)
+        public async Task<Reservation?> GetConflictReservation(Reservation reservation)
         {
 
             using (ReservroomDbContext context = _dbContextFactory.CreateDbContext())
             {
-                //ReservationDTO dto = new ReservationDTO()
-                //{
-                //    FloorNumber = reservation.RoomID?.FloorNumber ?? 0,
-                //    RoomNumber = reservation.RoomID?.RoomNumber ?? 0,
-                //    Username = reservation.Username,
-                //    StartDate = reservation.StartDate,
-                //    EndDate = reservation.EndDate
-                //};
-                //TODO: Pas trop efficace
-                var test = await context.Reservations.Select(r => ToReservation(r)).ToListAsync();
-                return test.FirstOrDefault(r => r.Conflict(reservation));
+                ReservationDTO? dto = await context.Reservations
+                    .Where( r => r.FloorNumber == reservation.RoomID.FloorNumber)
+                    .Where(r => r.RoomNumber == reservation.RoomID.RoomNumber)
+                    .Where(r => r.EndDate > reservation.StartDate)
+                    .Where(r => r.StartDate < reservation.EndDate)
+                    .FirstOrDefaultAsync();
+
+                return ToReservation(dto);
             }
         }
 
-        private static Reservation ToReservation(ReservationDTO dto)
+        private static Reservation? ToReservation(ReservationDTO? dto)
         {
+            if(dto == null)
+                return null;
             return new Reservation(new RoomID(dto.FloorNumber, dto.RoomNumber), dto.StartDate, dto.EndDate, dto.Username);
         }
     }

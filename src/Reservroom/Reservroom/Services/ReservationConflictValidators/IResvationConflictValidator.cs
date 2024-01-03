@@ -9,6 +9,6 @@ namespace Reservroom.Services.ReservationConflictValidators
 {
     public interface IResvationConflictValidator
     {
-        Task<Reservation> GetConflictReservation(Reservation reservation);
+        Task<Reservation?> GetConflictReservation(Reservation reservation);
     }
 }
