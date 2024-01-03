@@ -23,16 +23,17 @@ namespace Reservroom.Services.ReservationConflictValidators
 
             using (ReservroomDbContext context = _dbContextFactory.CreateDbContext())
             {
-                ReservationDTO dto = new ReservationDTO()
-                {
-                    FloorNumber = reservation.RoomID?.FloorNumber ?? 0,
-                    RoomNumber = reservation.RoomID?.RoomNumber ?? 0,
-                    Username = reservation.Username,
-                    StartDate = reservation.StartDate,
-                    EndDate = reservation.EndDate
-                };
+                //ReservationDTO dto = new ReservationDTO()
+                //{
+                //    FloorNumber = reservation.RoomID?.FloorNumber ?? 0,
+                //    RoomNumber = reservation.RoomID?.RoomNumber ?? 0,
+                //    Username = reservation.Username,
+                //    StartDate = reservation.StartDate,
+                //    EndDate = reservation.EndDate
+                //};
                 //TODO: Pas trop efficace
-                return await context.Reservations.Select( r => ToReservation(r)).FirstOrDefaultAsync(r=>r.Conflict(reservation));
+                var test = await context.Reservations.Select(r => ToReservation(r)).ToListAsync();
+                return test.FirstOrDefault(r => r.Conflict(reservation));
             }
         }
 
