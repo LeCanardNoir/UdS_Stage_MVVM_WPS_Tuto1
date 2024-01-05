@@ -1,4 +1,5 @@
 ﻿using Reservroom.Models;
+using Reservroom.Stores;
 using Reservroom.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Reservroom.Commands
 {
     public class LoadReservationCommand : AsyncCommandBase
     {
-        public readonly Hotel _hotel;
+        public readonly HotelStore _hotelStore;
         private readonly ReservationListViewModel _viewModel;
 
-        public LoadReservationCommand(Hotel hotel, ReservationListViewModel viewModel)
+        public LoadReservationCommand(HotelStore hotelStore, ReservationListViewModel viewModel)
         {
-            _hotel = hotel;
+            _hotelStore = hotelStore;
             _viewModel = viewModel;
         }
 
@@ -24,8 +25,8 @@ namespace Reservroom.Commands
         {
             try
             {
-                IEnumerable<Reservation> reservations = await _hotel.GetAllReservations();
-                _viewModel.UpdateReservation(reservations);
+                await _hotelStore.Load();
+                _viewModel.UpdateReservation(_hotelStore.Reservations);
             }
             catch (Exception)
             {
