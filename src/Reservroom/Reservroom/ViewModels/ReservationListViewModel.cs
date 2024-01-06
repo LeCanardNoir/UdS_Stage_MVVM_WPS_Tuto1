@@ -18,6 +18,17 @@ namespace Reservroom.ViewModels
         private readonly ObservableCollection<ReservationViewModel> _reservations;
         public IEnumerable<ReservationViewModel> Reservations => _reservations;
 
+        private bool _isLoading;
+        public bool IsLoading 
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(nameof(IsLoading));
+            }
+        }
+
         public ICommand LoadReservationCommand { get; }
         public ICommand MakeReservationCommand { get; }
 
