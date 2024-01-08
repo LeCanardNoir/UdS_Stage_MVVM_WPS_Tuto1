@@ -29,6 +29,20 @@ namespace Reservroom.ViewModels
             }
         }
 
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+                OnPropertyChanged(nameof(HasErrorMessage));
+            }
+        }
+
+        public bool HasErrorMessage => !string.IsNullOrEmpty(_errorMessage);
+
         public ICommand LoadReservationCommand { get; }
         public ICommand MakeReservationCommand { get; }
 

@@ -23,6 +23,7 @@ namespace Reservroom.Commands
 
         public override async Task ExecuteAsync(object? parameter)
         {
+            _viewModel.ErrorMessage = string.Empty;
             _viewModel.IsLoading = true;
             try
             {
@@ -31,7 +32,8 @@ namespace Reservroom.Commands
             }
             catch (Exception)
             {
-                MessageBox.Show("Fail to load reservation.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _viewModel.ErrorMessage = "Fail to load reservation.";
+                //MessageBox.Show("Fail to load reservation.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             _viewModel.IsLoading = false;
         }

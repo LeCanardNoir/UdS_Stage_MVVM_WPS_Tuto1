@@ -50,7 +50,7 @@ namespace Reservroom.Commands
         {
             Reservation reservation = new Reservation(
                 new RoomID(_makeReservationViewModel.FloorNumber, _makeReservationViewModel.RoomNumber),
-                _makeReservationViewModel.StatDate,
+                _makeReservationViewModel.StartDate,
                 _makeReservationViewModel.EndDate,
                 _makeReservationViewModel.Username
                 );

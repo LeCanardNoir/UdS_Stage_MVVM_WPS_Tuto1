@@ -84,7 +84,7 @@
                 Grid.Row="0" 
                 Grid.Column="0"/>
             <DatePicker 
-                SelectedDate="{Binding StatDate, UpdateSourceTrigger=PropertyChanged}" 
+                SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" 
                 Grid.Row="1" 
                 Grid.Column="0" 
                 Margin="0 5 0 0"/>
