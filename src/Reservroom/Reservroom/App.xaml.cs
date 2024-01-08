@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Reservroom.DbContexts;
 using Reservroom.Exceptions;
+using Reservroom.HostBuilders;
 using Reservroom.Models;
 using Reservroom.Services;
 using Reservroom.Services.ReservationConflictValidators;
@@ -25,55 +29,64 @@ namespace Reservroom
     public partial class App : Application
     {
         private const string CONNECTION_STRING = "Data Source=reservroom.db";
-        private readonly Hotel _hotel;
-        private readonly NavigationStore _navigationStore;
-        private readonly HotelStore _hotelStore;
-        private readonly ReservroomDbContextFactory _reservroomDbContextFactory;
+        private readonly IHost _host;
 
         public App()
         {
-            _reservroomDbContextFactory = new ReservroomDbContextFactory(CONNECTION_STRING);
-            IReservationProvider reservationProvider = new DatabaseReservationProvider(_reservroomDbContextFactory);
-            IReservationCreator reservationCreator = new DatabaseReservationCreator(_reservroomDbContextFactory);
-            IResvationConflictValidator reservationConflictValidator = new DataBaseReservationConflictValidator(_reservroomDbContextFactory);
+            _host = Host.CreateDefaultBuilder()
+                .AddViewModels()
+                .ConfigureServices((hostContext, services) => 
+                {
+                    string connectionString = hostContext.Configuration.GetConnectionString("Default");
+                    services.AddSingleton(new ReservroomDbContextFactory(connectionString));
 
-            ReservationBook reservationBook = new ReservationBook(reservationProvider, reservationCreator, reservationConflictValidator);
+                    services.AddSingleton<IReservationProvider, DatabaseReservationProvider>();
+                    services.AddSingleton<IReservationCreator, DatabaseReservationCreator>();
+                    services.AddSingleton<IResvationConflictValidator, DataBaseReservationConflictValidator>();
 
-            _hotel = new Hotel("burn@ Hotel", reservationBook);
-            _hotelStore = new HotelStore(_hotel);
-            _navigationStore = new NavigationStore();
+                    services.AddTransient<ReservationBook>();
+
+                    string hotelName = hostContext.Configuration.GetValue<string>("hotelName");
+                    services.AddSingleton<Hotel>(s => new Hotel(hotelName, s.GetRequiredService<ReservationBook>()));
+
+                    services.AddSingleton<HotelStore>();
+                    services.AddSingleton<NavigationStore>();
+
+
+                    services.AddSingleton(s => new MainWindow()
+                    {
+                        DataContext = s.GetRequiredService<MainViewModel>()
+                    });
+
+
+                }).Build();
+
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            using (ReservroomDbContext dbContext = _reservroomDbContextFactory.CreateDbContext())
+            _host.Start();
+            ReservroomDbContextFactory reservroomDbContextFactory = _host.Services.GetRequiredService<ReservroomDbContextFactory>();
+
+            using (ReservroomDbContext dbContext = reservroomDbContextFactory.CreateDbContext())
             {
                 dbContext.Database.Migrate();
             }
 
+            NavigationServices<ReservationListViewModel> navigationServices = _host.Services.GetRequiredService<NavigationServices<ReservationListViewModel>>();
+            navigationServices.Navigate();
 
-            _navigationStore.CurrentViewModel = CreateReservationListViewModel();
-            MainWindow = new MainWindow()
-            {
-                DataContext = new MainViewModel(_navigationStore)
-            };
+            MainWindow = _host.Services.GetRequiredService<MainWindow>();
 
             MainWindow.Show();
 
             base.OnStartup(e);
         }
 
-        private MakeReservationViewModel CreateMakeReservationViewModel()
+        protected override void OnExit(ExitEventArgs e)
         {
-            return new MakeReservationViewModel(_hotelStore, new NavigationServices(_navigationStore, CreateReservationListViewModel));
-        }
-
-        private ReservationListViewModel CreateReservationListViewModel()
-        {
-            return ReservationListViewModel.LoadViewModel(
-                _hotelStore, 
-                new NavigationServices(_navigationStore, CreateMakeReservationViewModel)
-                );
+            _host?.Dispose();
+            base.OnExit(e);
         }
     }
 }

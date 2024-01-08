@@ -46,13 +46,13 @@ namespace Reservroom.ViewModels
         public ICommand LoadReservationCommand { get; }
         public ICommand MakeReservationCommand { get; }
 
-        public ReservationListViewModel(HotelStore hotelStore, NavigationServices makeReservationViewNavigationServices)
+        public ReservationListViewModel(HotelStore hotelStore, NavigationServices<MakeReservationViewModel> makeReservationViewNavigationServices)
         {
             _hotelStore = hotelStore;
 
             _reservations = new ObservableCollection<ReservationViewModel>();
             LoadReservationCommand = new LoadReservationCommand(_hotelStore, this);
-            MakeReservationCommand = new NavigateCommand(makeReservationViewNavigationServices);
+            MakeReservationCommand = new NavigateCommand<MakeReservationViewModel>(makeReservationViewNavigationServices);
 
             _hotelStore.ReservationMade += OnReservationMade;
 
@@ -73,7 +73,7 @@ namespace Reservroom.ViewModels
             _reservations.Add(reservationViewModel);
         }
 
-        public static ReservationListViewModel LoadViewModel(HotelStore hotelStore, NavigationServices makeReservationViewNavigationServices)
+        public static ReservationListViewModel LoadViewModel(HotelStore hotelStore, NavigationServices<MakeReservationViewModel> makeReservationViewNavigationServices)
         {
             ReservationListViewModel viewModel = new ReservationListViewModel(hotelStore, makeReservationViewNavigationServices);
             viewModel.LoadReservationCommand.Execute(null);

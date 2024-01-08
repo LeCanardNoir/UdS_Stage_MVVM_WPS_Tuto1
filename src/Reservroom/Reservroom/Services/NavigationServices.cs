@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Reservroom.Services
 {
-    public class NavigationServices
+    public class NavigationServices<VM> where VM : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
-        private readonly Func<ViewModelBase> _createViewModel;
+        private readonly Func<VM> _createViewModel;
 
-        public NavigationServices(NavigationStore navigationStore, Func<ViewModelBase> createViewModel)
+        public NavigationServices(NavigationStore navigationStore, Func<VM> createViewModel)
         {
             _navigationStore = navigationStore;
             _createViewModel = createViewModel;

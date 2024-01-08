@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Reservroom.Commands
 {
-    public class NavigateCommand : CommandBase
+    public class NavigateCommand<VM> : CommandBase where VM : ViewModelBase
     {
-        private NavigationServices _navigateServices;
+        private NavigationServices<VM> _navigateServices;
 
-        public NavigateCommand(NavigationServices navigateServices)
+        public NavigateCommand(NavigationServices<VM> navigateServices)
         {
             _navigateServices = navigateServices;
         }

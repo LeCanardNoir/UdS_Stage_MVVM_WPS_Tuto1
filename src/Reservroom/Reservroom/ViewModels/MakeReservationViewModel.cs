@@ -96,10 +96,10 @@ namespace Reservroom.ViewModels
         public bool HasErrors => _propertyNameToErrorsDictionnary.Any();
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
-        public MakeReservationViewModel(HotelStore hotelStore, NavigationServices reservationViewNavigationServices)
+        public MakeReservationViewModel(HotelStore hotelStore, NavigationServices<ReservationListViewModel> reservationViewNavigationServices)
         {
             SubmitCommand = new MakeReservationCommand(this, hotelStore, reservationViewNavigationServices);
-            CancelCommand = new NavigateCommand(reservationViewNavigationServices);
+            CancelCommand = new NavigateCommand<ReservationListViewModel>(reservationViewNavigationServices);
             _propertyNameToErrorsDictionnary = new Dictionary<string, List<string>>();
         }
 

@@ -17,9 +17,9 @@ namespace Reservroom.Commands
     {
         private readonly MakeReservationViewModel _makeReservationViewModel;
         private readonly HotelStore _hotelStore;
-        private readonly NavigationServices _reservationViewNavigationServices;
+        private readonly NavigationServices<ReservationListViewModel> _reservationViewNavigationServices;
 
-        public MakeReservationCommand(ViewModels.MakeReservationViewModel makeReservationViewModel, HotelStore hotelStore, NavigationServices reservationViewNavigationServices)
+        public MakeReservationCommand(ViewModels.MakeReservationViewModel makeReservationViewModel, HotelStore hotelStore, NavigationServices<ReservationListViewModel> reservationViewNavigationServices)
         {
             this._makeReservationViewModel = makeReservationViewModel;
             _hotelStore = hotelStore;
